@@ -2,6 +2,7 @@
 #define SIMUWORLD_H
 
 #include <QMainWindow>
+#include <QMouseEvent>
 
 namespace Ui {
 class SimuWorld;
@@ -15,8 +16,14 @@ public:
     explicit SimuWorld(QWidget *parent = 0);
     ~SimuWorld();
 
+public slots:
+    void CreateBall();
+
 private:
     Ui::SimuWorld *ui;
+
+//protected:
+//    void MouseMoveEvent(QMouseEvent *event);
 };
 
 #endif // SIMUWORLD_H
