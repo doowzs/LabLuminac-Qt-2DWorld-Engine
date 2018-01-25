@@ -7,29 +7,36 @@
 #include <cmath>
 #include <ctime>
 #include <random>
+#include <QDir>
+#include <QDebug>
 
 class ball {
 public:
-    ball(double x, double y, double gl,
+    ball(int count, double x, double y, double gl,
          double gr, double gu, double gd, QWidget* pthis):
         posx(x), posy(y),
         gl(gl), gr(gr), gu(gu), gd(gd)
     {
-        myball = createBall(pthis);
+        myball = createBall(count, pthis);
     }
 
-    QLabel *createBall(QWidget* pthis) {
+    QLabel *createBall(int count, QWidget* pthis) {
         QLabel *tempball = new QLabel(pthis);
 
         tempball->setGeometry(posx, posy, width, height);
-        tempball->setObjectName(QString::fromUtf8("ball"));
+        tempball->setObjectName(QString::fromUtf8("ball")+QString::number(count));
         tempball->setAlignment(Qt::AlignCenter);
 
         srand((unsigned)time(0));
         int pixNum = rand()%5 + 1;
+
         QPixmap circle = QPixmap(
-            "C:/Users/Tianyun Zhang/Documents/Qt/Simple2DEngine/Resources/ball"
+            "../Simple2DEngine/Resources/ball"
                     + QString::number(pixNum) + ".png");
+
+        qDebug() << "Ball " + tempball->objectName() + " with color "
+                    + QString::number(pixNum) + " generated at ("
+                    + QString::number(posx) + ", " + QString::number(posy) + ").";
 
         tempball->setPixmap(circle);
 
@@ -50,28 +57,34 @@ public:
     }
 
     void groundDetectRespond() {
-        //左侧墙壁
+        //Left wall
         if (posx < gl) {
             posx = gl;
             speedx = 0 - speedx;
+            qDebug() << myball->objectName() + " touches the left wall.";
         }
-        //右侧墙壁
+        //Right wall
         if (posx > gr-width) {
             posx = gr-width;
             speedx = 0 - speedx;
+            qDebug() << myball->objectName() + " touches the right wall.";
         }
-        //地面
+        //Ground
         if (posy > gd-height) {
             posy = gd-height;
             speedy *= 1;
             speedx *= 1;
+            //This commit does not make balls stop as in the real world.
+            /*
             if(speedy <= 0.6){
                 speedy = 0;
             }
-            //if(speedx <= 0.05){
-            //    speedx = 0;
-            //}
+            if(speedx <= 0.05){
+                speedx = 0;
+            }
+            */
             speedy = 0 - speedy;
+            qDebug() << myball->objectName() + " touches the ground.";
         }
     }
 

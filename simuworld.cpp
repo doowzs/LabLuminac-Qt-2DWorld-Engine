@@ -6,6 +6,7 @@
 #include <QTime>
 
 std::vector<ball*> ballVector;
+int count = 0;
 int fps = 0;
 bool superFlag = true;
 
@@ -65,15 +66,14 @@ void SimuWorld::CreateBall() {
     QPoint mousePos;
     mousePos = QWidget::mapFromGlobal(QCursor::pos());
 
-    ball *newball = new ball(mousePos.x(), mousePos.y(),
+    ball *newball = new ball(count, mousePos.x(), mousePos.y(),
                            ui->ballTrigger->x(),
                            ui->ballTrigger->x()+ui->ballTrigger->width(),
                            ui->ballTrigger->y(),
                            ui->ballTrigger->y()+ui->ballTrigger->height(),
                            this);
     ballVector.push_back(newball);
-
-    //if(isFirstInit)BallMoving();
+    count++;
 }
 
 void SimuWorld::StopAll() {

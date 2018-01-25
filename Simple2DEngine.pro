@@ -41,3 +41,5 @@ DISTFILES += \
     Resources/ball3.png \
     Resources/ball4.png \
     Resources/ball5.png
+
+RESOURCES +=
