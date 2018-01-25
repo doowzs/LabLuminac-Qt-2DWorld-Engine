@@ -5,6 +5,8 @@
 #include <QCoreApplication>
 #include <QElapsedTimer>
 #include <cmath>
+#include <ctime>
+#include <random>
 
 class ball {
 public:
@@ -21,12 +23,17 @@ public:
 
         tempball->setGeometry(posx, posy, width, height);
         tempball->setObjectName(QString::fromUtf8("ball"));
-        tempball->setPixmap(QPixmap(
-            "C:/Users/Tianyun Zhang/Documents/Qt/Simple2DEngine/Resources/ball.png"));
         tempball->setAlignment(Qt::AlignCenter);
 
-        tempball->show();
+        srand((unsigned)time(0));
+        int pixNum = rand()%5 + 1;
+        QPixmap circle = QPixmap(
+            "C:/Users/Tianyun Zhang/Documents/Qt/Simple2DEngine/Resources/ball"
+                    + QString::number(pixNum) + ".png");
 
+        tempball->setPixmap(circle);
+
+        tempball->show();
         return tempball;
     }
 
@@ -49,13 +56,13 @@ public:
             speedx = 0 - speedx;
         }
         //右侧墙壁
-        if (posx > gr-40) {
-            posx = gr-40;
+        if (posx > gr-width) {
+            posx = gr-width;
             speedx = 0 - speedx;
         }
         //地面
-        if (posy > gd-40) {
-            posy = gd-40;
+        if (posy > gd-height) {
+            posy = gd-height;
             speedy *= 1;
             speedx *= 1;
             if(speedy <= 0.6){

@@ -7,11 +7,10 @@
 
 std::vector<ball*> ballVector;
 int fps = 0;
-//bool superFlag = true;
-//bool isFirstInit = true;
+bool superFlag = true;
 
-QTimer *timer1 = new QTimer(this);
-QTimer *timer2 = new QTimer(this);
+QTimer *timer1, *timer2;
+int timer1Interval = 15;
 
 SimuWorld::SimuWorld(QWidget *parent) :
     QMainWindow(parent),
@@ -24,9 +23,11 @@ SimuWorld::SimuWorld(QWidget *parent) :
     connect(ui->continueButton, SIGNAL(clicked(bool)), this, SLOT(ContinueAll()));
     connect(ui->clearButton, SIGNAL(clicked(bool)), this, SLOT(ClearAll()));
 
-    timer1->start(15);
+    timer1 = new QTimer(this);
+    timer1->start(timer1Interval);
     connect(timer1, SIGNAL(timeout()), this, SLOT(BallMoving()));
 
+    timer2 = new QTimer(this);
     timer2->start(1000);
     connect(timer2, SIGNAL(timeout()), this, SLOT(ShowFPS()));
 }
@@ -38,22 +39,17 @@ SimuWorld::~SimuWorld()
 
 void SimuWorld::BallMoving() {
     try{
-        //while(superFlag){
-            //ui->label->setText(QString::number(ballVector.size()));
-
-
-            for(int i = 0; i<ballVector.size(); i++){
-                ballVector[i]->fall();
-                ballVector[i]->go();
-                ballVector[i]->groundDetectRespond();
-                for(int j = i+1; j<ballVector.size(); j++){
-                    ballVector[i]->collisionDetectRespond(ballVector[j]);
-                }
+        for(int i = 0; i<ballVector.size(); i++){
+            ballVector[i]->fall();
+            ballVector[i]->go();
+            ballVector[i]->groundDetectRespond();
+            for(int j = i+1; j<ballVector.size(); j++){
+                ballVector[i]->collisionDetectRespond(ballVector[j]);
             }
-            fps++;
+        }
 
-            //QCoreApplication::processEvents();
-        //}
+        fps++;
+        ui->lcdNumber->display((int)ballVector.size());
     }catch (std::exception e){
         ui->label->setText(e.what());
         ClearAll();
@@ -81,14 +77,14 @@ void SimuWorld::CreateBall() {
 }
 
 void SimuWorld::StopAll() {
-    //superFlag = false;
+    superFlag = false;
     timer1->stop();
     ui->stopButton->setEnabled(false);
     ui->continueButton->setEnabled(true);
 }
 
 void SimuWorld::ContinueAll() {
-    //superFlag = true;
+    superFlag = true;
     timer1->start();
     ui->stopButton->setEnabled(true);
     ui->continueButton->setEnabled(false);
@@ -107,6 +103,15 @@ void SimuWorld::ClearAll() {
 }
 
 void SimuWorld::ShowFPS() {
-    ui->label->setText(QString::number(fps));
+    if(fps>80) {
+        timer1Interval++;
+        timer1->stop();
+        if(superFlag)timer1->start(timer1Interval);
+    } else {
+        if(fps>0 && timer1Interval>1)timer1Interval--;
+        timer1->stop();
+        if(superFlag)timer1->start(timer1Interval);
+    }
+    ui->label->setText("FPS: "+QString::number(fps));
     fps = 0;
 }
