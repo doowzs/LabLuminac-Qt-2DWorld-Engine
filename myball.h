@@ -56,8 +56,8 @@ public:
         //地面
         if (posy > gd-40) {
             posy = gd-40;
-            speedy *= 0.6;
-            speedx *= 0.99;
+            speedy *= 1;
+            speedx *= 1;
             if(speedy <= 0.6){
                 speedy = 0;
             }
@@ -74,10 +74,8 @@ public:
         double dis = sqrt(pow(disx,2) + pow(disy,2));
 
         if (dis < 40) {
-            //假设发生非弹性碰撞，损失10%能量
-            //a,b交换动能(好像错了？)
-            double e = 0.9 * (pow(speedx,2) + pow(speedy,2));
-            double eb = 0.9 * (pow(b->speedx,2) + pow(b->speedy,2));
+            double e = 1 * (pow(speedx,2) + pow(speedy,2));
+            double eb = 1 * (pow(b->speedx,2) + pow(b->speedy,2));
             if(!e)e+=0.1;if(!eb)eb+=0.1;
             speedx = sqrt(eb) * (disx / dis);
             speedy = sqrt(eb) * (disy / dis);
