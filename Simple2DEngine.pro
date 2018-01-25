@@ -28,7 +28,8 @@ SOURCES += \
         simuworld.cpp
 
 HEADERS += \
-        simuworld.h
+        simuworld.h \
+    myball.h
 
 FORMS += \
         simuworld.ui

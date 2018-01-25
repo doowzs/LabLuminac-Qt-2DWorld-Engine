@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 #include <QMouseEvent>
+#include <QVBoxLayout>
+#include <QVector>
+#include "myball.h"
 
 namespace Ui {
 class SimuWorld;
@@ -18,8 +21,12 @@ public:
 
 public slots:
     void CreateBall();
+    void StopAll();
+    void ContinueAll();
+    void ClearAll();
 
 private:
+    QVector<int> vector;
     Ui::SimuWorld *ui;
 
 //protected:
