@@ -34,12 +34,7 @@ HEADERS += \
 FORMS += \
         simuworld.ui
 
-DISTFILES += \
-    Resources/ball.png \
-    Resources/ball1.png \
-    Resources/ball2.png \
-    Resources/ball3.png \
-    Resources/ball4.png \
-    Resources/ball5.png
+DISTFILES +=
 
-RESOURCES +=
+RESOURCES += \
+    res.qrc

@@ -40,11 +40,11 @@ SimuWorld::~SimuWorld()
 
 void SimuWorld::BallMoving() {
     try{
-        for(int i = 0; i<ballVector.size(); i++){
+        for(int i = 0; i<(signed)ballVector.size(); i++){
             ballVector[i]->fall();
             ballVector[i]->go();
             ballVector[i]->groundDetectRespond();
-            for(int j = i+1; j<ballVector.size(); j++){
+            for(int j = i+1; j<(signed)ballVector.size(); j++){
                 ballVector[i]->collisionDetectRespond(ballVector[j]);
             }
         }
@@ -81,6 +81,7 @@ void SimuWorld::StopAll() {
     timer1->stop();
     ui->stopButton->setEnabled(false);
     ui->continueButton->setEnabled(true);
+    qDebug() << "Stopped.";
 }
 
 void SimuWorld::ContinueAll() {
@@ -89,6 +90,7 @@ void SimuWorld::ContinueAll() {
     ui->stopButton->setEnabled(true);
     ui->continueButton->setEnabled(false);
     BallMoving();
+    qDebug() << "Recovered.";
 }
 
 void SimuWorld::ClearAll() {
@@ -100,6 +102,8 @@ void SimuWorld::ClearAll() {
     //ui->label->setText(QString::number(0));
     ui->stopButton->setEnabled(true);
     ui->continueButton->setEnabled(false);
+    count = 0;
+    qDebug() << "All cleared.";
 }
 
 void SimuWorld::ShowFPS() {

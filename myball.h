@@ -27,11 +27,9 @@ public:
         tempball->setObjectName(QString::fromUtf8("ball")+QString::number(count));
         tempball->setAlignment(Qt::AlignCenter);
 
-        srand((unsigned)time(0));
-        int pixNum = rand()%5 + 1;
-
+        int pixNum = ((int)(posx+posy))%5+1;
         QPixmap circle = QPixmap(
-            "../Simple2DEngine/Resources/ball"
+            ":/Resources/ball"
                     + QString::number(pixNum) + ".png");
 
         qDebug() << "Ball " + tempball->objectName() + " with color "
@@ -45,6 +43,7 @@ public:
     }
 
     void fall() {
+        //add the speed according to the gravity law
         speedy += 0.030;
     }
 
@@ -61,30 +60,33 @@ public:
         if (posx < gl) {
             posx = gl;
             speedx = 0 - speedx;
-            qDebug() << myball->objectName() + " touches the left wall.";
+            qDebug() << myball->objectName() + " touches the left wall at ("
+                        + QString::number(posx) + ", " + QString::number(posy) + ").";
         }
         //Right wall
         if (posx > gr-width) {
             posx = gr-width;
             speedx = 0 - speedx;
-            qDebug() << myball->objectName() + " touches the right wall.";
+            qDebug() << myball->objectName() + " touches the right wall at ("
+                        + QString::number(posx) + ", " + QString::number(posy) + ").";
         }
         //Ground
         if (posy > gd-height) {
             posy = gd-height;
             speedy *= 1;
             speedx *= 1;
-            //This commit does not make balls stop as in the real world.
-            /*
             if(speedy <= 0.6){
                 speedy = 0;
             }
+            //This app does not take fraction into consideration.
+            /*
             if(speedx <= 0.05){
                 speedx = 0;
             }
             */
             speedy = 0 - speedy;
-            qDebug() << myball->objectName() + " touches the ground.";
+            qDebug() << myball->objectName() + " touches the ground at ("
+                        + QString::number(posx) + ", " + QString::number(posy) + ").";
         }
     }
 
@@ -94,9 +96,17 @@ public:
         double dis = sqrt(pow(disx,2) + pow(disy,2));
 
         if (dis < 40) {
+            qDebug() << "Collision between " + myball->objectName()
+                        + " and " + b->myball->objectName() + " detected at ("
+                        + QString::number(posx) + ", " + QString::number(posy) + ").";
+
             double e = 1 * (pow(speedx,2) + pow(speedy,2));
             double eb = 1 * (pow(b->speedx,2) + pow(b->speedy,2));
+
+            //in case one has stopped on the ground, without this may cause error
             if(!e)e+=0.1;if(!eb)eb+=0.1;
+
+            //swap their energy
             speedx = sqrt(eb) * (disx / dis);
             speedy = sqrt(eb) * (disy / dis);
             b->speedx = - sqrt(e) * (disx / dis);
@@ -105,6 +115,7 @@ public:
     }
 
     ~ball() {
+        qDebug() << myball->objectName() + " is beging deleted.";
         delete myball;
     }
 
