@@ -17,6 +17,7 @@ class SimuWorld : public QMainWindow
 
 public:
     explicit SimuWorld(QWidget *parent = 0);
+    void BallMoving();
     ~SimuWorld();
 
 public slots:

@@ -60,10 +60,10 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>420</x>
-      <y>300</y>
-      <width>351</width>
-      <height>81</height>
+      <x>0</x>
+      <y>0</y>
+      <width>71</width>
+      <height>51</height>
      </rect>
     </property>
     <property name="font">
@@ -72,7 +72,7 @@
      </font>
     </property>
     <property name="text">
-     <string>测试数据</string>
+     <string>测试</string>
     </property>
    </widget>
    <widget class="QPushButton" name="stopButton">

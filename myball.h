@@ -4,13 +4,14 @@
 #include <QLabel>
 #include <QCoreApplication>
 #include <QElapsedTimer>
+#include <cmath>
 
 class ball {
 public:
-    ball(double x, double y, double gx,
-         double gy, QWidget* pthis):
+    ball(double x, double y, double gl,
+         double gr, double gu, double gd, QWidget* pthis):
         posx(x), posy(y),
-        groundx(gx), groundy(gy)
+        gl(gl), gr(gr), gu(gu), gd(gd)
     {
         myball = createBall(pthis);
     }
@@ -30,7 +31,10 @@ public:
     }
 
     void fall() {
-        speedy += 0.020;
+        speedy += 0.030;
+    }
+
+    void go() {
         posx += speedx;
         posy += speedy;
 
@@ -39,34 +43,58 @@ public:
     }
 
     void groundDetectRespond() {
-        if (posy > groundy-40) {
-            posy = groundy-40;
+        //左侧墙壁
+        if (posx < gl) {
+            posx = gl;
+            speedx = 0 - speedx;
+        }
+        //右侧墙壁
+        if (posx > gr-40) {
+            posx = gr-40;
+            speedx = 0 - speedx;
+        }
+        //地面
+        if (posy > gd-40) {
+            posy = gd-40;
             speedy *= 0.6;
+            speedx *= 0.99;
             if(speedy <= 0.6){
                 speedy = 0;
             }
+            //if(speedx <= 0.05){
+            //    speedx = 0;
+            //}
             speedy = 0 - speedy;
         }
     }
 
-    bool collisionDetectRespond(ball A, ball B) {
+    void collisionDetectRespond(ball* b) {
+        double disx = posx - b->posx;
+        double disy = posy - b->posy;
+        double dis = sqrt(pow(disx,2) + pow(disy,2));
 
-    }
-
-    void destoryLabel() {
-        myball->hide();
-        delete myball;
+        if (dis < 40) {
+            //假设发生非弹性碰撞，损失10%能量
+            //a,b交换动能(好像错了？)
+            double e = 0.9 * (pow(speedx,2) + pow(speedy,2));
+            double eb = 0.9 * (pow(b->speedx,2) + pow(b->speedy,2));
+            if(!e)e+=0.1;if(!eb)eb+=0.1;
+            speedx = sqrt(eb) * (disx / dis);
+            speedy = sqrt(eb) * (disy / dis);
+            b->speedx = - sqrt(e) * (disx / dis);
+            b->speedy = - sqrt(e) * (disy / dis);
+        }
     }
 
     ~ball() {
-        //bug will appear here
+        delete myball;
     }
 
-//private:
+private:
     QLabel *myball;
     double posx = 0, posy = 0;
     int width = 40, height = 40;
-    int groundx = 0, groundy = 0;
+    int gl = 0, gr = 0, gu = 0, gd = 0;
     double speedx = 0, speedy = 0;
 };
 
